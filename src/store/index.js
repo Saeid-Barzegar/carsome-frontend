@@ -85,7 +85,6 @@ const initialState = {
     }
   ],
   inspections: [],
-  lastSubmit: '',
   message:{
     type: '',
     content: ''
@@ -98,20 +97,13 @@ export default new Vuex.Store({
   },
   getters:{
     getInspections: state => state.inspections,
-    getHourRange: state => state.hourRange,
-    getMinuteRange: state => state.minuteRange,
-    getLastSubmit: state => state.lastSubmit,
+    getHourRange: state => state.hourRange,     // in the real case should get from backend
+    getMinuteRange: state => state.minuteRange, // in the real case should get from backend
     getMessage: state => state.message,
   },
   mutations: {
     setInspections: (state, payload) => {
       state.inspections = payload
-    },
-    setLastSubmit: (state, payload) => {
-      state.lastSubmit = payload
-    },
-    clearState: state => {
-      state = initialState
     },
     setMessage: (state, payload) => {
       state.message = payload
@@ -136,15 +128,14 @@ export default new Vuex.Store({
           let savedData = response.data.data
           if(!isEmpty(savedData)){
             commit('setInspections', [...getters.getInspections, savedData])
-            commit('setLastSubmit', new Date())
             commit('setMessage', {
               type: 'success',
-              content: 'Inspection Saved successfully...'
+              content: response.data.message
             })
           }else{
             commit('setMessage', {
               type: 'error',
-              content: 'Something went wrong...'
+              content: response.data.message
             })
           }
           

@@ -1,6 +1,25 @@
 <template>
   <div class="home">
-    <b-container class="col-10" style="padding-top: 60px">
+    <div class="col-lg-10" style="padding-top: 20px">
+
+      <b-alert 
+        variant="success" 
+        dismissible
+        v-show="getMessage.type === 'success'"
+        @dismissed='clearMessage()'
+        show
+        >{{getMessage.content}}</b-alert>
+
+      <b-alert 
+        variant="danger" 
+        dismissible
+        v-show="getMessage.type === 'error'"
+        @dismissed='clearMessage()'
+        show
+        >{{getMessage.content}}</b-alert>
+
+    </div>
+    <b-container class="col-10" style="padding-top: 40px">
       <div>
         <b-button 
           variant="success" 
@@ -33,7 +52,7 @@
 
 import List from "@/components/List.vue";
 import Form from "@/components/Form.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "Home",
@@ -41,10 +60,32 @@ export default {
     List,
     Form
   },
+  data(){
+    return{
+      timer: undefined
+    }
+  },
+  watch:{
+        getMessage: function name(newValue, oldValue) {
+            let time = 5;
+            if(newValue.content.length > 0){
+                this.timer = setInterval(()=>{
+                    if(time > 0){
+                        time--;
+                    }else{
+                        this.clearMessage()
+                    }
+                }, 1000)
+            }else{
+                clearInterval(this.timer);
+            }
+        }
+    },
   computed:{
-    ...mapGetters(['getInspections'])
+    ...mapGetters(['getInspections', 'getMessage'])
   },
   methods:{
+    ...mapMutations(['setMessage']),
     checkLastTimeStamp: function(params) {
         const inspections = this.getInspections || []
         console.log("count >>>", inspections.length);
@@ -72,7 +113,12 @@ export default {
     hideModal: function(params) {
       this.$bvModal.hide(params)
     },
-    
+    clearMessage: function () {
+      this.setMessage({
+        type: "", 
+        content: ""
+      })
+    }
     
   },
   mounted: function(){

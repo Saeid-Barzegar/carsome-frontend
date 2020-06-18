@@ -181,7 +181,6 @@
 <script>
 
 import axios from "axios";
-import { isEmpty } from "lodash";
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
