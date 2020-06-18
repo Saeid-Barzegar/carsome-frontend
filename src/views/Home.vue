@@ -8,6 +8,7 @@
         v-show="getMessage.type === 'success'"
         @dismissed='clearMessage()'
         show
+        fade
         >{{getMessage.content}}</b-alert>
 
       <b-alert 
@@ -16,6 +17,7 @@
         v-show="getMessage.type === 'error'"
         @dismissed='clearMessage()'
         show
+        fade
         >{{getMessage.content}}</b-alert>
 
     </div>
